@@ -8,36 +8,32 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.akhi.app.model.BurgerUser;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class JwtUserDetails implements UserDetails {
 
   private static final long serialVersionUID = 5155720064139820502L;
 
-  private final Long id;
-  private final String username;
-  private final String password;
+
+  private final BurgerUser burgerUser;
   private final Collection<? extends GrantedAuthority> authorities;
 
-  public JwtUserDetails(Long id, String username, String password, String role) {
-    this.id = id;
-    this.username = username;
-    this.password = password;
-
+  public JwtUserDetails(Long id, String email, String password, String role) {
+    this.burgerUser = new BurgerUser(id,null,password,email);
     List<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
     authorities.add(new SimpleGrantedAuthority(role));
-
     this.authorities = authorities;
   }
 
   @JsonIgnore
   public Long getId() {
-    return id;
+    return burgerUser.getId();
   }
 
   @Override
   public String getUsername() {
-    return username;
+    return burgerUser.getEmail();
   }
 
   @JsonIgnore
@@ -61,7 +57,7 @@ public class JwtUserDetails implements UserDetails {
   @JsonIgnore
   @Override
   public String getPassword() {
-    return password;
+    return burgerUser.getPassword();
   }
 
   @Override
@@ -73,6 +69,10 @@ public class JwtUserDetails implements UserDetails {
   public boolean isEnabled() {
     return true;
   }
+
+public BurgerUser getBurgerUser() {
+	return burgerUser;
+}
 
 }
 

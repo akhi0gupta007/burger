@@ -1,17 +1,11 @@
 package com.akhi.app.jwt.resource;
 
-import java.util.Objects;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -23,9 +17,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.akhi.app.exceptions.EmailExistsException;
 import com.akhi.app.jwt.JwtTokenUtil;
 import com.akhi.app.jwt.JwtUserDetails;
-import com.akhi.app.service.TokenService;
+import com.akhi.app.service.AuthenticationService;
+import com.akhi.app.service.BurgerUserService;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -35,8 +31,8 @@ public class JwtAuthenticationRestController {
 	private String tokenHeader;
 
 	@Autowired
-	private AuthenticationManager authenticationManager;
-
+	private AuthenticationService authService;
+	
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
 
@@ -44,13 +40,13 @@ public class JwtAuthenticationRestController {
 	private UserDetailsService jwtInMemoryUserDetailsService;
 
 	@Autowired
-	private TokenService tokenService;
+	private BurgerUserService burgerUserService;
 
 	@RequestMapping(value = "${jwt.get.token.uri}", method = RequestMethod.POST)
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtTokenRequest authenticationRequest)
 			throws AuthenticationException {
 
-		authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+		authService.authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
 
 		final UserDetails userDetails = jwtInMemoryUserDetailsService
 				.loadUserByUsername(authenticationRequest.getUsername());
@@ -76,9 +72,17 @@ public class JwtAuthenticationRestController {
 	}
 
 	@PostMapping("/signUp")
-	public ResponseEntity<JwtTokenResponse> signUp(@RequestBody JwtTokenRequest tokenRequest) {
-		JwtTokenResponse sigupUser = tokenService.sigupUser(tokenRequest);
+	public ResponseEntity<JwtTokenResponse> signUp(@RequestBody JwtTokenRequest tokenRequest)
+			throws EmailExistsException {
+		JwtTokenResponse sigupUser = burgerUserService.signUpUser(tokenRequest);		
 		return new ResponseEntity<JwtTokenResponse>(sigupUser, HttpStatus.OK);
+	}
+	
+	@PostMapping("/signIn")
+	public ResponseEntity<JwtTokenResponse> signIn(@RequestBody JwtTokenRequest tokenRequest)
+			throws EmailExistsException {
+		JwtTokenResponse signInUser = burgerUserService.signInUser(tokenRequest);		
+		return new ResponseEntity<JwtTokenResponse>(signInUser, HttpStatus.OK);
 	}
 
 	@GetMapping("/hello")
@@ -91,16 +95,9 @@ public class JwtAuthenticationRestController {
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
 	}
 
-	private void authenticate(String username, String password) {
-		Objects.requireNonNull(username);
-		Objects.requireNonNull(password);
-
-		try {
-			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-		} catch (DisabledException e) {
-			throw new AuthenticationException("USER_DISABLED", e);
-		} catch (BadCredentialsException e) {
-			throw new AuthenticationException("INVALID_CREDENTIALS", e);
-		}
+	@ExceptionHandler({ EmailExistsException.class })
+	public ResponseEntity<String> handleEmailExistsException(EmailExistsException e) {
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 	}
+	
 }

@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import com.akhi.app.jwt.resource.JwtTokenResponse;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Clock;
 import io.jsonwebtoken.Jwts;
@@ -65,6 +67,23 @@ public class JwtTokenUtil implements Serializable {
     Map<String, Object> claims = new HashMap<>();
     return doGenerateToken(claims, userDetails.getUsername());
   }
+  
+  public JwtTokenResponse generateToken2(UserDetails userDetails) {
+	    Map<String, Object> claims = new HashMap<>();
+	    return doGenerateToken2(claims, userDetails.getUsername());
+  }
+  
+  private JwtTokenResponse doGenerateToken2(Map<String, Object> claims, String subject) {
+	    final Date createdDate = clock.now();
+	    final Date expirationDate = calculateExpirationDate(createdDate);
+
+	    String token = Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(createdDate)
+	        .setExpiration(expirationDate).signWith(SignatureAlgorithm.HS512, secret).compact();
+	    JwtTokenResponse  response= new JwtTokenResponse(token);
+	    response.setExpiresIn(expirationDate.getTime());	    
+	    return response;
+	  }
+
 
   private String doGenerateToken(Map<String, Object> claims, String subject) {
     final Date createdDate = clock.now();

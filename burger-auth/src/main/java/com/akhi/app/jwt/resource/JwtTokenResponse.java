@@ -12,6 +12,7 @@ public class JwtTokenResponse implements Serializable {
 	private Boolean registered;
 	private String refreshToken;
 	private Long expiresIn;
+	private String localId;
 
 	public JwtTokenResponse(String token) {
 		this.idToken = token;
@@ -63,6 +64,14 @@ public class JwtTokenResponse implements Serializable {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public String getLocalId() {
+		return localId;
+	}
+
+	public void setLocalId(String localId) {
+		this.localId = localId;
 	}
 	
 }
