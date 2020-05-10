@@ -24,52 +24,53 @@ import io.jsonwebtoken.ExpiredJwtException;
 @Component
 public class JwtTokenAuthorizationOncePerRequestFilter extends OncePerRequestFilter {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    private UserDetailsService jwtInMemoryUserDetailsService;
-    
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
-    
-    @Value("${jwt.http.request.header}")
-    private String tokenHeader;
+	@Autowired
+	private UserDetailsService jwtUserDetailsService;
 
-    @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
-        logger.debug("Authentication Request For '{}'", request.getRequestURL());
+	@Autowired
+	private JwtTokenUtil jwtTokenUtil;
 
-        final String requestTokenHeader = request.getHeader(this.tokenHeader);
+	@Value("${jwt.http.request.header}")
+	private String tokenHeader;
 
-        String username = null;
-        String jwtToken = null;
-        if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
-            jwtToken = requestTokenHeader.substring(7);
-            try {
-                username = jwtTokenUtil.getUsernameFromToken(jwtToken);
-            } catch (IllegalArgumentException e) {
-                logger.error("JWT_TOKEN_UNABLE_TO_GET_USERNAME", e);
-            } catch (ExpiredJwtException e) {
-                logger.warn("JWT_TOKEN_EXPIRED", e);
-            }
-        } else {
-            logger.warn("JWT_TOKEN_DOES_NOT_START_WITH_BEARER_STRING");
-        }
+	@Override
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+			throws ServletException, IOException {
+		logger.debug("Authentication Request For '{}'", request.getRequestURL());
 
-        logger.debug("JWT_TOKEN_USERNAME_VALUE '{}'", username);
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+		final String requestTokenHeader = request.getHeader(this.tokenHeader);
 
-            UserDetails userDetails = this.jwtInMemoryUserDetailsService.loadUserByUsername(username);
+		String username = null;
+		String jwtToken = null;
+		if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
+			jwtToken = requestTokenHeader.substring(7);
+			try {
+				username = jwtTokenUtil.getUsernameFromToken(jwtToken);
+			} catch (IllegalArgumentException e) {
+				logger.error("JWT_TOKEN_UNABLE_TO_GET_USERNAME", e);
+			} catch (ExpiredJwtException e) {
+				logger.warn("JWT_TOKEN_EXPIRED", e);
+			}
+		} else {
+			logger.warn("JWT_TOKEN_DOES_NOT_START_WITH_BEARER_STRING");
+		}
 
-            if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
-                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-            }
-        }
+		logger.debug("JWT_TOKEN_USERNAME_VALUE '{}'", username);
+		if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-        chain.doFilter(request, response);
-    }
+			UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername(username);
+
+			if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
+				UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+						userDetails, null, userDetails.getAuthorities());
+				usernamePasswordAuthenticationToken
+						.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+				SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+			}
+		}
+
+		chain.doFilter(request, response);
+	}
 }
-
-
