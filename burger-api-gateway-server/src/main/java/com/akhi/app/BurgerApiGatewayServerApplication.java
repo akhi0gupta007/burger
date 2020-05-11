@@ -3,16 +3,15 @@ package com.akhi.app;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.openfeign.EnableFeignClients;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 
-@SpringBootApplication
-@EnableJpaAuditing
 @EnableDiscoveryClient
-public class BurgerAuthApplication {
+@EnableZuulProxy
+@SpringBootApplication
+public class BurgerApiGatewayServerApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BurgerAuthApplication.class, args);
+		SpringApplication.run(BurgerApiGatewayServerApplication.class, args);
 	}
 
 }
