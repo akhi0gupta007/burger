@@ -1,0 +1,32 @@
+server:
+  port: 9000
+spring:
+  application:
+    name: burger-ingredients-server
+  datasource:
+    url: jdbc:mysql://localhost:3306/burger
+    username: root
+    password: admin
+    initialization-mode: always
+  jpa:
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl  
+    properties:
+      show-sql: true
+      format-sql: true
+security:      
+  oauth2:
+    resource:
+      token-info-uri: http://localhost:9191/oauth/check_token
+    client:
+      client-id: mobile
+      client-secret: pin
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: debug 
+     

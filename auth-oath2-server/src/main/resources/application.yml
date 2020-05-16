@@ -13,6 +13,13 @@ spring:
     properties:
       show-sql: true
       format-sql: true
+
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: debug 
      
       
           
