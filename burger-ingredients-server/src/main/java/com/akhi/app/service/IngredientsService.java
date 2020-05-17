@@ -5,16 +5,16 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.akhi.app.model.Ingredients;
-import com.akhi.app.repository.IngredientsRepository;
+import com.akhi.app.model.Ingredient;
+import com.akhi.app.repository.IngredientRepository;
 
 @Service
 public class IngredientsService {
 	
 	@Autowired
-	private IngredientsRepository repo;
+	private IngredientRepository repo;
 
-	public List<Ingredients> getIngredients() {
+	public List<Ingredient> getIngredients() {
 		return repo.findAll();
 	}
 

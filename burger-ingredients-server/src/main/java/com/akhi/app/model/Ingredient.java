@@ -7,34 +7,29 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 
 @Entity
-@Table(name = "ingredientsData")
+@Table(name = "ingredient")
 @Data
-public class IngredientsData implements Serializable{
+public class Ingredient implements Serializable{
 
 	private static final long serialVersionUID = 1L;
+	public Ingredient() {}
 	
-	@Id
+    @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 	
-	@OneToOne
-	@JoinColumn(name="ingredients_id",referencedColumnName = "id",nullable = false)
-	private Ingredients ingredients;
-	
-	@OneToOne
-	@JoinColumn(name="order_id",referencedColumnName = "id",nullable = false)
-	private Orders order;
-	
 	@Column
-	private Integer quantity;
+	private String name;	
 	
-	
-	
+	@JsonIgnore
+	@Column	
+	private Integer quantity = 0;
+
 }
