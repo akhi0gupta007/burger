@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.akhi.app.model.Ingredient;
+import com.akhi.app.model.ingredients.Ingredient;
 import com.akhi.app.repository.IngredientRepository;
 
 @Service

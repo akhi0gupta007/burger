@@ -1,4 +1,4 @@
-package com.akhi.app.model;
+package com.akhi.app.model.ingredients;
 
 import java.io.Serializable;
 

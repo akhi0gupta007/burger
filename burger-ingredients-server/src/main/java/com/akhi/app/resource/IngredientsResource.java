@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.akhi.app.model.Ingredient;
+import com.akhi.app.model.ingredients.Ingredient;
 import com.akhi.app.service.IngredientsService;
 
 @RestController

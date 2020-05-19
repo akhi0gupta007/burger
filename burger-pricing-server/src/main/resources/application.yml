@@ -1,0 +1,27 @@
+server:
+  port: 9001
+spring:
+  application:
+    name: burger-pricing-server
+  datasource:
+    url: jdbc:mysql://localhost:3306/burger-pricing?createDatabaseIfNotExists=true
+    username: root
+    password: admin
+    initialization-mode: always
+  jpa:
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl  
+    properties:
+      show-sql: true
+      format-sql: true
+                  
+
+
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: debug 

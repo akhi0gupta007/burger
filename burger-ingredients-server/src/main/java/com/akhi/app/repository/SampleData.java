@@ -9,9 +9,11 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import com.akhi.app.model.Ingredients;
-import com.akhi.app.model.OrderData;
-import com.akhi.app.model.Orders;
+import com.akhi.app.model.ingredients.Ingredients;
+import com.akhi.app.model.ingredients.OrderData;
+import com.akhi.app.model.ingredients.Orders;
+
+
 
 @Component
 public class SampleData implements ApplicationRunner {
