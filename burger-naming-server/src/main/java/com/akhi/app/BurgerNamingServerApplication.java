@@ -7,7 +7,7 @@ import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
 
 @SpringBootApplication
 @EnableEurekaServer
-@EnableDiscoveryClient
+//@EnableDiscoveryClient
 public class BurgerNamingServerApplication {
 
 	public static void main(String[] args) {

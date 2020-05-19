@@ -1,0 +1,27 @@
+server:
+  port: 8761
+spring:
+  application:
+    name: burger-naming-server
+  profiles:
+    active:
+    - dev    
+    
+
+eureka:
+  client:
+    fetch-registry: false
+    register-with-eureka: false
+  instance:
+    hostname: localhost
+    
+    
+   
+      
+        
+logging:
+  level:
+    org:
+      org:
+        springframework: DEBUG
+
