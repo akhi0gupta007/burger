@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
+import com.akhi.app.config.HystrixConfig;
 import com.akhi.app.hystrix.CommonHystrixCommand;
 import com.akhi.app.model.ingredients.Ingredients;
 import com.akhi.app.model.ingredients.Orders;
@@ -35,6 +36,9 @@ public class OrderService {
 
 	@Autowired
 	RestTemplate restTemplate;
+	
+	@Autowired
+	HystrixConfig config;
 
 	@Bean
 	@LoadBalanced
@@ -80,7 +84,7 @@ public class OrderService {
 		//BurgerPriceCommand priceCommand = new BurgerPriceCommand(restTemplate);//This is non generic hystrix implementation
 		final String url = "http://BURGER-PRICING-SERVER/burger-price";
 
-		CommonHystrixCommand<List<BurgerPricing>> priceCommand = new CommonHystrixCommand<>("default", () -> {
+		CommonHystrixCommand<List<BurgerPricing>> priceCommand = new CommonHystrixCommand<>(config.config(), () -> {
 			return restTemplate
 					.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<List<BurgerPricing>>() {
 					}).getBody();
