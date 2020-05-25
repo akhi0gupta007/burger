@@ -1,0 +1,29 @@
+spring:
+ application:
+    name: burger-cloud-gateway
+server:
+  port: 8765
+eureka:
+  client:
+    #fetch-registry: true
+    register-with-eureka: false   
+  instance:
+    instance-id: ${spring.application.name}-${random.int}
+    hostname: localhost 
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: hystrix.stream
+        
+#add configuration for enabling hystrix stream actuator
+hystrix:
+  command:
+    fallbackcmd:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 3000    
+    
+ 
