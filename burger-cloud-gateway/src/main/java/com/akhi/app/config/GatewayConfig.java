@@ -5,17 +5,13 @@ import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.cloud.netflix.hystrix.EnableHystrix;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.codec.ServerCodecConfigurer;
 
 
 @Configuration
 @EnableHystrix
 public class GatewayConfig {
 	
-//	@Bean
-//	public ServerCodecConfigurer serverCodecConfigurer() {
-//	   return ServerCodecConfigurer.create();
-//	}
+
 
     @Bean
     public RouteLocator myRoutes(RouteLocatorBuilder builder) {
