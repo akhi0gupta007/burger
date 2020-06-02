@@ -15,6 +15,7 @@ import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
@@ -32,19 +33,24 @@ public class OrderService {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
-	OrderRepository orderRepo;
+	private OrderRepository orderRepo;
 
 	@Autowired
-	RestTemplate restTemplate;
+	private RestTemplate restTemplate;
+
+	@Autowired
+	private HystrixConfig config;
 	
 	@Autowired
-	HystrixConfig config;
+	private KafkaTemplate<String, Orders> kafkaTemplate;
 
 	@Bean
 	@LoadBalanced
 	RestTemplate getRestTemplate(RestTemplateBuilder builder) {
 		return builder.build();
 	}
+	
+	
 
 	org.slf4j.Logger log = LoggerFactory.getLogger(getClass());
 
@@ -60,6 +66,8 @@ public class OrderService {
 		orders.getOrderData().setOrder(orders); // working for two way mapping
 		Double totalPrice = calculatePrice(orders, fetchBurgerPricings());
 		orders.setPrice(totalPrice);
+		
+		kafkaTemplate.send("burger-order",orders);
 		return orderRepo.save(orders);
 	}
 
@@ -78,10 +86,11 @@ public class OrderService {
 		return totalPrice;
 	}
 
-	Map<Integer, Double> fetchBurgerPricings() {
+	public Map<Integer, Double> fetchBurgerPricings() {
 		Map<Integer, Double> pricings = new HashMap<>();
 
-		//BurgerPriceCommand priceCommand = new BurgerPriceCommand(restTemplate);//This is non generic hystrix implementation
+		// BurgerPriceCommand priceCommand = new BurgerPriceCommand(restTemplate);//This
+		// is non generic hystrix implementation
 		final String url = "http://BURGER-PRICING-SERVER/burger-price";
 
 		CommonHystrixCommand<List<BurgerPricing>> priceCommand = new CommonHystrixCommand<>(config.config(), () -> {
@@ -97,7 +106,7 @@ public class OrderService {
 		} catch (InterruptedException | ExecutionException e) {
 			e.printStackTrace();
 		}
-		
+
 		prices.forEach(price -> {
 			pricings.put(price.getIngredient(), price.getPrice());
 		});

@@ -12,6 +12,13 @@ spring:
     properties:
       show-sql: true
       format-sql: true
+#  kafka:
+#    producer:
+#      bootstrap-servers:
+#      - 192.168.1.15:9092
+#      key-serializer: org.apache.kafka.common.serialization.StringDeserializer
+#      value-serializer: org.apache.kafka.common.serialization.StringDeserializer
+          
 security:      
   oauth2:
     resource:

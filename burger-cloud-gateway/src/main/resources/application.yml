@@ -18,12 +18,12 @@ management:
         include: hystrix.stream
         
 #add configuration for enabling hystrix stream actuator
-hystrix:
+hystrix:  
   command:
-    fallbackcmd:
+    default:
       execution:
         isolation:
           thread:
-            timeoutInMilliseconds: 3000    
+            timeoutInMilliseconds: 100000
     
  
