@@ -1,0 +1,51 @@
+server:
+  port: 9191
+spring:
+  datasource:
+    url: jdbc:mysql://us-cdbr-east-05.cleardb.net/ad_b80b4a90117845e
+    username: b760c9b8a70883
+    password: f9e52121
+    initialization-mode: always
+    hikari:
+      maximum-pool-size: 2
+  jpa:
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl  
+    properties:
+      show-sql: true
+      format-sql: true
+
+
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: debug 
+     
+      
+          
+
+  
+#spring:
+#  security:
+#    user:
+#      name: akhi
+#      password: akhi123
+#      roles: ADMIN,USER
+#      
+#security:
+#  oauth2:
+#    client:
+#      client-id: mobile
+#      client-secret: pin
+#      access-token-validity-seconds: 3600
+#      authorized-grant-types: refresh_token,authorization_code,password,client_credentials
+#      scope: READ,WRITE
+#    authorization:
+#      check-token-access: permitAll
+#      
+      
+      
+            

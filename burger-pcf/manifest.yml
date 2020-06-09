@@ -1,0 +1,8 @@
+applications:
+- name: burger-pcf
+path: target/burger-pcf.jar
+domain: cfapps.io
+memory: 1G
+instances: 1
+services:
+- burger-service-registry

@@ -1,0 +1,8 @@
+applications:
+- name: auth-oath2-server
+path: target/auth-oath2-server.jar
+domain: cfapps.io
+instances: 1
+services:
+- burger-service-registry
+- mysql
