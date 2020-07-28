@@ -52,7 +52,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 		http.csrf().disable();
 		http
 		.authorizeRequests()
-		.antMatchers("/ingredients")
+		.antMatchers("/ingredients","/actuator")
 		.permitAll();
 	}
 

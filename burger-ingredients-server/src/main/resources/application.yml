@@ -27,6 +27,13 @@ security:
       client-id: mobile
       client-secret: pin
       
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+        - hystrix.stream      
+      
      
 
 logging:

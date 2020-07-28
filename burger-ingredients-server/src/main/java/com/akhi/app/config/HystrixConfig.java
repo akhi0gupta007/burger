@@ -9,7 +9,10 @@ import org.springframework.context.annotation.Configuration;
 
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
+import com.netflix.hystrix.HystrixCommandKey;
 import com.netflix.hystrix.HystrixCommandProperties;
+import com.netflix.hystrix.HystrixThreadPoolKey;
+import com.netflix.hystrix.HystrixThreadPoolProperties;
 
 @Configuration
 @EnableConfigurationProperties
@@ -38,5 +41,22 @@ public class HystrixConfig {
 		this.timeout = timeout;
 	}
 	
+	private static HystrixCommand.Setter setter1() {
+	    HystrixCommandGroupKey groupkey = HystrixCommandGroupKey.Factory.asKey("rpc");
+	    HystrixCommandKey commandkey = HystrixCommandKey.Factory.asKey("say");
+	    HystrixThreadPoolKey threadpoolkey = HystrixThreadPoolKey.Factory.asKey("hello-1");
+	    HystrixThreadPoolProperties.Setter threadproperties = HystrixThreadPoolProperties.Setter()//
+	                    .withCoreSize(20).withKeepAliveTimeMinutes(5).withMaxQueueSize(1000).withQueueSizeRejectionThreshold(100);
+
+	    HystrixCommandProperties.Setter commandproperty = HystrixCommandProperties.Setter()//
+	                    .withExecutionIsolationStrategy(HystrixCommandProperties.ExecutionIsolationStrategy.THREAD)//
+	                    .withFallbackEnabled(true).withFallbackIsolationSemaphoreMaxConcurrentRequests(100)//
+	                    .withExecutionIsolationThreadInterruptOnFutureCancel(true)//
+	                    .withExecutionIsolationThreadInterruptOnTimeout(true)//
+	                    .withExecutionTimeoutEnabled(true).withExecutionTimeoutInMilliseconds(1000);
+	    return HystrixCommand.Setter.withGroupKey(groupkey).andCommandKey(commandkey)//
+	                    .andThreadPoolKey(threadpoolkey).andThreadPoolPropertiesDefaults(threadproperties)//
+	                    .andCommandPropertiesDefaults(commandproperty);
+	}
 	
 }
