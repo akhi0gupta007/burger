@@ -1,11 +1,11 @@
 spring:
  application:    name: burger-oath2-server
 
-eureka:
-  client:
-    fetch-registry: true
-    register-with-eureka: true
-    healthcheck:      enabled: true   
-  instance:
-    instance-id: ${spring.application.name}-${random.int}
-    hostname: localhost 
+#eureka:
+#  client:
+#    fetch-registry: true
+#    register-with-eureka: true
+#    healthcheck:#      enabled: true   
+#  instance:
+#    instance-id: ${spring.application.name}-${random.int}
+#    hostname: localhost 

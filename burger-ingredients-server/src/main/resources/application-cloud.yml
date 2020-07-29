@@ -23,7 +23,21 @@ logging:
     org:
       hibernate:
         SQL: debug 
-     
+ 
+security:      
+  oauth2:
+    resource:
+      token-info-uri: https://auth-oath2-server.cfapps.io/oauth/check_token
+    client:
+      client-id: mobile
+      client-secret: pin
+      
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+        - hystrix.stream    
       
           
 

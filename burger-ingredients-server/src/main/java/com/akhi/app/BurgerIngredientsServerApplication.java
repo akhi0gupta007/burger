@@ -23,6 +23,7 @@ import com.akhi.app.config.SwaggerConfig;
 public class BurgerIngredientsServerApplication {
 
 	public static void main(String[] args) {
+		System.setProperty("spring.profiles.default", "cloud");
 		SpringApplication.run(BurgerIngredientsServerApplication.class, args);
 	}
 
